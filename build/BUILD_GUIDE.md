@@ -165,7 +165,7 @@ sudo systemctl start ctf-bootkey.service
 ```
 
 ### 3.3 Extraction Helper (Student-Facing)
-Provide a helper that creates `public.txt`, `private.txt`, and `flag.txt` once the user has the required access. The helper will fail if the user does not have permission to read the protected flag file.
+Provide a helper that creates `flag.txt` and `key.txt` once the user has the required access. The helper will fail if the user does not have permission to read the protected flag file.
 
 ```bash
 sudo tee /usr/local/bin/ctf-extract > /dev/null <<'SH'
@@ -186,8 +186,6 @@ if [[ ! -r "$KEY_FILE" ]]; then
 fi
 
 KEY=$(cat "$KEY_FILE")
-PUBLIC=$(printf '%s' "PUBLIC:$PROBLEM:$KEY" | sha256sum | awk '{print $1}')
-PRIVATE=$(printf '%s' "PRIVATE:$PROBLEM:$KEY" | sha256sum | awk '{print $1}')
 
 FLAG_PATH=""
 case "$PROBLEM" in
@@ -203,19 +201,15 @@ if [[ ! -r "$FLAG_PATH" ]]; then
   exit 1
 fi
 
-cat > public.txt <<EOF
-$PUBLIC
-EOF
-
-cat > private.txt <<EOF
-$PRIVATE
-EOF
-
 cat > flag.txt <<EOF
 $(cat "$FLAG_PATH")
 EOF
 
-echo "Wrote public.txt, private.txt, flag.txt"
+cat > key.txt <<EOF
+$KEY
+EOF
+
+echo "Wrote flag.txt, key.txt"
 SH
 
 sudo chmod 755 /usr/local/bin/ctf-extract
@@ -375,6 +369,18 @@ ssh -i /tmp/id_rsa -p 2222 p1@localhost
 
 # P2
 ls -l /home/p1/p2/p2  # should be rwsr-xr-x root root
+file /home/p1/p2/p2   # should be ELF 64-bit, not PIE
+```
+
+Quick P2 exploit sanity check (as p1):
+```bash
+# Get win() address
+nm -n /home/p1/p2/p2 | rg " win$"
+# Then craft payload (offset may be 72 on x86_64):
+# python3 -c 'print("A"*72 + "<addr>")' | /home/p1/p2/p2
+```
+Continue checks:
+```bash
 
 # P3
 ls -l /home/p1/p3/p3  # should be rwsr-xr-x p3flag p3flag
@@ -410,7 +416,7 @@ sudo ctf-extract P2
 
 Submission (tar available, zip not required):
 ```bash
-tar -czf 2022CSZ123456-P1.tar.gz public.txt private.txt flag.txt key.txt
+tar -czf 2022CSZ123456-P1.tar.gz flag.txt key.txt
 ```
 
 Copy submission to host (from host terminal):

@@ -119,26 +119,16 @@ if [[ ! -r "$FLAG_PATH" ]]; then
 fi
 
 KEY=$(cat "$KEY_FILE")
-PUBLIC=$(printf '%s' "PUBLIC:P1:$KEY" | sha256sum | awk '{print $1}')
-PRIVATE=$(printf '%s' "PRIVATE:P1:$KEY" | sha256sum | awk '{print $1}')
-
-cat > public.txt <<EOF
-$PUBLIC
-EOF
-
-cat > private.txt <<EOF
-$PRIVATE
-EOF
 
 cat > flag.txt <<EOF
 $(cat "$FLAG_PATH")
 EOF
 
 cat > key.txt <<EOF
-$(cat "$KEY_FILE")
+$KEY
 EOF
 
-echo "Wrote public.txt, private.txt, flag.txt, key.txt"
+echo "Wrote flag.txt, key.txt"
 SH
 
 chmod 755 /usr/local/bin/ctf-extract
