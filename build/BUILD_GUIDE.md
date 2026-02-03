@@ -297,6 +297,14 @@ sudo tee /home/p1/p3/p3.c > /dev/null <<'C'
 #include <stdlib.h>
 #include <unistd.h>
 
+static void mark_solved(void) {
+    FILE *f = fopen("/opt/p3/solved", "w");
+    if (f) {
+        fputs("ok\n", f);
+        fclose(f);
+    }
+}
+
 void win() {
     FILE *f = fopen("/opt/p3/flag_p3.txt", "r");
     if (!f) {
@@ -307,6 +315,8 @@ void win() {
     fgets(flag, sizeof(flag), f);
     printf("FLAG: %s\n", flag);
     fclose(f);
+    mark_solved();
+    exit(0);
 }
 
 void vuln() {
@@ -325,39 +335,6 @@ sudo gcc -fno-stack-protector -no-pie -z noexecstack -o /home/p1/p3/p3 /home/p1/
 sudo chown p3flag:p3flag /home/p1/p3/p3
 sudo chmod 4755 /home/p1/p3/p3
 ```
-
-### P4: Trusted Code Reuse (Ret2libc)
-Goal: Use ret2libc to call `system("/bin/sh")` (NX enabled) and read `/opt/p4/flag_p4.txt`.
-
-#### P4 Binary
-```bash
-sudo mkdir -p /home/p1/p4
-sudo tee /home/p1/p4/p4.c > /dev/null <<'C'
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-void vuln() {
-    char buf[64];
-    puts("Input:");
-    gets(buf);
-}
-
-int main() {
-    setbuf(stdout, NULL);
-    vuln();
-    return 0;
-}
-C
-
-sudo gcc -fno-stack-protector -no-pie -z noexecstack -o /home/p1/p4/p4 /home/p1/p4/p4.c
-sudo chown p4flag:p4flag /home/p1/p4/p4
-sudo chmod 4755 /home/p1/p4/p4
-```
-
-Note: With ASLR disabled, students can use libc offsets to craft the exploit.
-
----
 
 ## 5) Validation Checklist
 
