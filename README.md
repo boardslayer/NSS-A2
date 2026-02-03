@@ -6,7 +6,7 @@
 **Instructions**
 - This assignment is a capture-the-flag problem.
 - You will be given one single Ubuntu Linux image.
-- There are five problem sets, each dependent on the previous.
+- There are four problem sets, each dependent on the previous.
 - For each problem, you need to create a file in the stated format only.
 
 ## Problem 1: Gain Access
@@ -17,12 +17,13 @@ You are a penetration tester tasked with checking the system deployment of the n
 **Hint:** Think of ways that information may leak on a public server. How does one connect to the server to work?
 
 **Solution Format**  
-Submit a single zip file named `[EntryNumber]-P1.zip`, e.g., `2022CSZ228227-P1.zip`. The file should contain `public.txt`, `private.txt`, and `flag.txt`.
+Submit a single tarball named `[EntryNumber]-P1.tar.gz`, e.g., `2022CSZ228227-P1.tar.gz`. The file should contain `public.txt`, `private.txt`, `flag.txt`, and `key.txt`.
 
 ```text
-[EntryNumber]-P1.zip
+[EntryNumber]-P1.tar.gz
 |-- public.txt
 |-- private.txt
+|-- key.txt
 `-- flag.txt
 ```
 
@@ -35,12 +36,13 @@ Now that you have gained initial access to the NSA systems, your next task is to
 **Hint:** You are provided with several executable programs inside the vulnerable user's home directory. Can they be used somehow?
 
 **Solution Format**  
-Submit a single zip file named `[EntryNumber]-P2.zip`, e.g., `2022CSZ228228-P2.zip`. The file should contain `public.txt`, `private.txt`, and `flag.txt`.
+Submit a single tarball named `[EntryNumber]-P2.tar.gz`, e.g., `2022CSZ228228-P2.tar.gz`. The file should contain `public.txt`, `private.txt`, `flag.txt`, and `key.txt`.
 
 ```text
-[EntryNumber]-P2.zip
+[EntryNumber]-P2.tar.gz
 |-- public.txt
 |-- private.txt
+|-- key.txt
 `-- flag.txt
 ```
 
@@ -53,12 +55,13 @@ In this problem, you are provided with a standalone program that processes user 
 **Hint:** Programs do not always execute instructions in the order intended by the developer. Carefully analyze how the program stores and returns control during execution.
 
 **Solution Format**  
-Submit a single zip file named `[EntryNumber]-P3.zip`, e.g., `2022CSZ228229-P3.zip`. The file should contain `public.txt`, `private.txt`, and `flag.txt`.
+Submit a single tarball named `[EntryNumber]-P3.tar.gz`, e.g., `2022CSZ228229-P3.tar.gz`. The file should contain `public.txt`, `private.txt`, `flag.txt`, and `key.txt`.
 
 ```text
-[EntryNumber]-P3.zip
+[EntryNumber]-P3.tar.gz
 |-- public.txt
 |-- private.txt
+|-- key.txt
 `-- flag.txt
 ```
 
@@ -71,12 +74,13 @@ In the previous problem, you explored how program execution can be redirected wh
 **Hint:** Even when new code cannot be executed, previously loaded code may still be invoked in unintended ways. Understanding how programs interact with system libraries may be helpful.
 
 **Solution Format**  
-Submit a single zip file named `[EntryNumber]-P4.zip`, e.g., `2022CSZ228230-P4.zip`. The file should contain `public.txt`, `private.txt`, and `flag.txt`.
+Submit a single tarball named `[EntryNumber]-P4.tar.gz`, e.g., `2022CSZ228230-P4.tar.gz`. The file should contain `public.txt`, `private.txt`, `flag.txt`, and `key.txt`.
 
 ```text
-[EntryNumber]-P4.zip
+[EntryNumber]-P4.tar.gz
 |-- public.txt
 |-- private.txt
+|-- key.txt
 `-- flag.txt
 ```
 

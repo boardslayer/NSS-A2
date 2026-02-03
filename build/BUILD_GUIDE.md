@@ -370,7 +370,7 @@ Note: With ASLR disabled, students can use libc offsets to craft the exploit.
 Run these checks:
 ```bash
 # P1
-curl http://localhost/backup/id_rsa
+curl http://localhost:8000/backup/id_rsa
 ssh -i /tmp/id_rsa -p 2222 p1@localhost
 
 # P2

@@ -26,7 +26,7 @@ Use this checklist to create the VM and prepare it for the P1 provisioning step.
 - [x] Complete install and reboot
 
 ## 4) Base Package Install (inside VM)
-Run:
+Run (skip `apt update/upgrade` if you want to avoid updating existing software):
 ```bash
 sudo apt update
 sudo apt -y upgrade
@@ -34,11 +34,11 @@ sudo apt -y install openssh-server nginx build-essential gdb python3 python3-pip
 ```
 
 ## 5) Copy Provision Script into VM
-- [ ] Copy `provision_p1.sh` into VM (e.g., via `scp` or shared folder)
+- [ ] Copy `p1/provision_p1.sh` into VM (e.g., via `scp` or shared folder)
 
 Example from host:
 ```bash
-scp -P 2222 provision_p1.sh ctfadmin@localhost:/home/ctfadmin/
+scp -P 2222 p1/provision_p1.sh ctfadmin@localhost:/home/ctfadmin/
 ```
 
 ## 6) Run P1 Provisioning Script
