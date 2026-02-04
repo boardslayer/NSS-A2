@@ -59,13 +59,13 @@ Submit a single tarball named `[EntryNumber]-P3.tar.gz`, e.g., `2022CSZ228229-P3
 `-- key.txt
 ```
 
-## Problem 4: Trusted Code Reuse
+## Problem 4: Format String Vulnerability
 
-In the previous problem, you explored how program execution can be redirected when control data is corrupted. The provided program incorporates additional execution protections to prevent attackers from injecting their own code. While direct code injection may no longer be possible, the program still relies on trusted system libraries during execution.
+In the previous problem, you redirected execution by corrupting control data. In this problem, the program mishandles formatted output, allowing attacker‑controlled input to be interpreted as a format string. This can leak memory or overwrite data even when code injection is blocked.
 
-**Goal:** Leverage the existing code available on the system to obtain the second protected flag.
+**Goal:** Exploit some input vulnerability to obtain a protected flag.
 
-**Hint:** Even when new code cannot be executed, previously loaded code may still be invoked in unintended ways. Understanding how programs interact with system libraries may be helpful.
+**Hint:** Output functions may interpret user input in unexpected ways. Consider how formatted output functions process arguments internally.
 
 **Solution Format**  
 Submit a single tarball named `[EntryNumber]-P4.tar.gz`, e.g., `2022CSZ228230-P4.tar.gz`. The file should contain `flag.txt` and `key.txt`.

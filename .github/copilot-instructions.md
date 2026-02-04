@@ -56,7 +56,7 @@ ctf-extract  # Generates flag.txt and key.txt per problem
 **P3-P4 (Buffer Overflow Exploitation)**: 
 - Classic stack buffer overflows using `gets()`
 - P3: Return address overwrite to `win()` function
-- P4: ROP/library reuse under execution protections
+- P4: Return-to-libc attack (NX enabled, no `win()`, ASLR disabled)
 
 ## Development Conventions
 

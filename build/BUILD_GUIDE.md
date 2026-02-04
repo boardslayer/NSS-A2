@@ -336,6 +336,75 @@ sudo chown p3flag:p3flag /home/p1/p3/p3
 sudo chmod 4755 /home/p1/p3/p3
 ```
 
+### P4: Format String (Auth Gate)
+Goal: Use a format-string bug to flip an auth check and trigger `win()` to print `/opt/p4/flag_p4.txt`.
+
+#### P4 Binary
+```bash
+sudo mkdir -p /home/p1/p4
+sudo tee /home/p1/p4/p4.c > /dev/null <<'C'
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+void win(void) {
+    FILE *f = fopen("/opt/p4/flag_p4.txt", "r");
+    if (!f) {
+        puts("No flag");
+        exit(1);
+    }
+    char flag[128];
+    if (fgets(flag, sizeof(flag), f) != NULL) {
+        printf("FLAG: %s\n", flag);
+    } else {
+        puts("No flag");
+    }
+    fclose(f);
+    FILE *s = fopen("/opt/p4/solved", "w");
+    if (s) {
+        fputs("ok\n", s);
+        fclose(s);
+    }
+    exit(0);
+}
+
+void safe(void) {
+    puts("Nope.");
+}
+
+void (*fp)(void) = safe;
+
+void vuln(void) {
+    char buf[128];
+    int auth = 0;
+    int dummy = 0;
+    puts("Input:");
+    if (!fgets(buf, sizeof(buf), stdin)) {
+        return;
+    }
+    printf(buf, &auth, dummy);
+    if (auth == 0x1337) {
+        fp = win;
+    }
+    fp();
+}
+
+int main(void) {
+    setbuf(stdout, NULL);
+    setbuf(stderr, NULL);
+    setgid(getegid());
+    setuid(geteuid());
+    vuln();
+    return 0;
+}
+C
+
+sudo gcc -fno-stack-protector -no-pie -z noexecstack -o /home/p1/p4/p4 /home/p1/p4/p4.c
+sudo chown p4flag:p4flag /home/p1/p4/p4
+sudo chmod 4755 /home/p1/p4/p4
+sudo rm -f /home/p1/p4/p4.c
+```
+
 ## 5) Validation Checklist
 
 Run these checks:

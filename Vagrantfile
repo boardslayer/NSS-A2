@@ -81,8 +81,8 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-  config.vm.provision "shell", path: "../p1/provision_p1.sh"
-  config.vm.provision "shell", path: "../p2/provision_p2.sh"
-  config.vm.provision "shell", path: "../p3/provision_p3.sh"
-  # config.vm.provision "shell", path: "../p4/provision_p4.sh"
+  config.vm.provision "shell", path: "p1/provision_p1.sh"
+  config.vm.provision "shell", path: "p2/provision_p2.sh"
+  config.vm.provision "shell", path: "p3/provision_p3.sh"
+  config.vm.provision "shell", path: "p4/provision_p4.sh"
 end
