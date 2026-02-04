@@ -249,6 +249,15 @@ Hint: The admin page loads your CSS from `/submit` and hides the flag with CSS.
 ctf-extract P5
 ```
 
+### Reset P5 (for testing)
+```bash
+sudo rm -f /opt/p5/solved
+echo "/* submit CSS to reveal the flag */" | sudo tee /opt/p5/user.css >/dev/null
+sudo chown ctfadmin:ctfadmin /opt/p5/user.css
+sudo chmod 644 /opt/p5/user.css
+sudo systemctl restart p5-server.service
+```
+
 ### Submission
 ```bash
 tar -czf 2022CSZ123456-P5.tar.gz flag.txt key.txt
