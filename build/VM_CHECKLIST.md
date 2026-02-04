@@ -14,6 +14,7 @@ Use this checklist to create the VM and prepare it for the P1 provisioning step.
 - [x] Port forwards:
 - [x] Host 2222 -> Guest 22 (SSH)
 - [x] Host 8000 -> Guest 80 (HTTP)
+- [x] Host 5901 -> Guest 5901 (VNC for P5)
 - [x] Optional decoy forwards:
 - [x] Host 9001 -> Guest 9001
 - [x] Host 9002 -> Guest 9002
@@ -61,3 +62,7 @@ sudo systemctl status ssh
 ---
 
 When complete, tell me and we'll move on to P2-P4 setup.
+
+P5 notes:
+- VNC server runs on `:1` (host port 5901)
+- P5 web app runs on `http://127.0.0.1:5005` inside the VM

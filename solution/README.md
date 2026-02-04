@@ -185,11 +185,17 @@ Hint: `printf` is called directly on your input with a pointer argument on the s
 ```bash
 ls -l /home/p1/p4/p4
 file /home/p1/p4/p4
+
+
+p1@vagrant:~$  nm -n /home/p1/p4/p4 | grep " win$"
+nm -n /home/p1/p4/p4 | grep " fp$"
+0000000000400984 t win
+0000000000411088 d fp
 ```
 
 ### High-Level Steps
 1. Find the format-string argument offset for your input.
-2. Use `%n` to write `0x1337` into `auth`.
+2. Use `%n` to write `0x1337` into `auth`. They find this by using GDB to inspect the stack.
 3. The program switches `fp` to `win()` and prints the flag, also creating `/opt/p4/solved`.
 
 ### Example (offset discovery)
@@ -221,4 +227,33 @@ tar -czf 2022CSZ123456-P4.tar.gz flag.txt key.txt
 Copy submission to host:
 ```bash
 scp -P 2222 -i id_rsa p1@localhost:2022CSZ123456-P4.tar.gz .
+```
+
+## Problem 5: CSS Hijacking
+
+### Summary
+Goal: Use CSS to reveal the hidden flag on the admin page loaded in Epiphany.
+Hint: The admin page loads your CSS from `/submit` and hides the flag with CSS.
+
+### Steps (inside VM)
+1. Open Epiphany (via VNC, host port `5901`) and visit:
+   - `http://127.0.0.1:5005/` (CSS submit page)
+   - `http://127.0.0.1:5005/admin` (admin page)
+2. Submit CSS that reveals `#flag`:
+```css
+#flag { display: block !important; color: red; font-size: 24px; }
+#flag::after { content: attr(data-flag); }
+```
+3. Reload the admin page to see the flag and then run:
+```bash
+ctf-extract P5
+```
+
+### Submission
+```bash
+tar -czf 2022CSZ123456-P5.tar.gz flag.txt key.txt
+```
+Copy submission to host:
+```bash
+scp -P 2222 -i id_rsa p1@localhost:2022CSZ123456-P5.tar.gz .
 ```

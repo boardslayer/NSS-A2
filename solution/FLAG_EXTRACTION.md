@@ -1,4 +1,4 @@
-# Flag Extraction Steps (P1–P4)
+# Flag Extraction Steps (P1–P5)
 
 This document lists the exact commands to extract flags and generate the submission files for each problem.
 
@@ -69,4 +69,20 @@ tar -czf 2022CSZ123456-P4.tar.gz flag.txt key.txt
 Copy to host:
 ```bash
 scp -P 2222 p1@localhost:/home/p1/2022CSZ123456-P4.tar.gz .
+```
+
+---
+
+## Problem 5 (P5)
+After you submit CSS for P5 (which creates `/opt/p5/solved`):
+```bash
+ctf-extract P5
+```
+Package submission:
+```bash
+tar -czf 2022CSZ123456-P5.tar.gz flag.txt key.txt
+```
+Copy to host:
+```bash
+scp -P 2222 p1@localhost:/home/p1/2022CSZ123456-P5.tar.gz .
 ```

@@ -1,6 +1,6 @@
 # NSS A2 Single-VM CTF Build Guide (Ubuntu Server + VirtualBox)
 
-This document is a comprehensive, step-by-step build guide for a single Ubuntu VM image that supports all four problems (P1–P4) in the assignment. It is written so you can reproduce the VM on an ARM64 host now and replicate on AMD64 later.
+This document is a comprehensive, step-by-step build guide for a single Ubuntu VM image that supports all five problems (P1–P5) in the assignment. It is written so you can reproduce the VM on an ARM64 host now and replicate on AMD64 later.
 
 Important instructor note satisfied:
 - All flags depend on a per-boot key stored in the P1 user’s profile.
@@ -11,7 +11,7 @@ The guidance below is split into:
 1. VM creation and OS install
 2. Base system configuration
 3. Flag and keying system
-4. Problem-specific setup (P1–P4)
+4. Problem-specific setup (P1–P5)
 5. Validation checklist
 6. Student-facing run notes
 
@@ -92,7 +92,7 @@ sudo sysctl -p /etc/sysctl.d/01-disable-aslr.conf
 
 ## 3) Flag and Keying System (Per-Boot Key)
 
-We store a per-boot secret key in `/home/p1/.keys/boot.key`. A boot-time service regenerates it and uses it to derive flags for P1–P4, then writes those flags into protected locations (with correct permissions).
+We store a per-boot secret key in `/home/p1/.keys/boot.key`. A boot-time service regenerates it and uses it to derive flags for P1–P5, then writes those flags into protected locations (with correct permissions).
 
 ### 3.1 Boot Key and Flag Generator Script
 Create a script that runs on boot:
@@ -109,12 +109,16 @@ head -c 32 /dev/urandom | base64 > "$KEY_FILE"
 chown p1:p1 "$KEY_FILE"
 chmod 600 "$KEY_FILE"
 
+# Clear per-boot solved markers
+rm -f /opt/p3/solved /opt/p4/solved /opt/p5/solved 2>/dev/null || true
+
 # Derive flags using the per-boot key
 KEY=$(cat "$KEY_FILE")
 FLAG_P1=$(printf '%s' "P1:$KEY" | sha256sum | awk '{print $1}')
 FLAG_P2=$(printf '%s' "P2:$KEY" | sha256sum | awk '{print $1}')
 FLAG_P3=$(printf '%s' "P3:$KEY" | sha256sum | awk '{print $1}')
 FLAG_P4=$(printf '%s' "P4:$KEY" | sha256sum | awk '{print $1}')
+FLAG_P5=$(printf '%s' "P5:$KEY" | sha256sum | awk '{print $1}')
 
 # Write flags to protected locations
 # P1 flag in p1 home (readable by p1)
@@ -138,6 +142,12 @@ install -d -m 700 -o p4flag -g p4flag /opt/p4
 printf '%s\n' "$FLAG_P4" > /opt/p4/flag_p4.txt
 chown p4flag:p4flag /opt/p4/flag_p4.txt
 chmod 600 /opt/p4/flag_p4.txt
+
+# P5 flag owned by ctfadmin
+install -d -m 700 -o ctfadmin -g ctfadmin /home/ctfadmin/flags
+printf '%s\n' "$FLAG_P5" > /home/ctfadmin/flags/flag_p5.txt
+chown ctfadmin:ctfadmin /home/ctfadmin/flags/flag_p5.txt
+chmod 600 /home/ctfadmin/flags/flag_p5.txt
 SH
 
 sudo chmod 750 /opt/ctf/boot-keygen.sh
@@ -173,7 +183,7 @@ sudo tee /usr/local/bin/ctf-extract > /dev/null <<'SH'
 set -euo pipefail
 
 if [[ $# -ne 1 ]]; then
-  echo "Usage: ctf-extract P1|P2|P3|P4"
+  echo "Usage: ctf-extract P1|P2|P3|P4|P5"
   exit 1
 fi
 
@@ -193,6 +203,7 @@ case "$PROBLEM" in
   P2) FLAG_PATH=/root/flag_p2.txt ;;
   P3) FLAG_PATH=/opt/p3/flag_p3.txt ;;
   P4) FLAG_PATH=/opt/p4/flag_p4.txt ;;
+  P5) FLAG_PATH=/home/ctfadmin/flags/flag_p5.txt ;;
   *) echo "Invalid problem"; exit 1 ;;
 esac
 
@@ -216,7 +227,7 @@ sudo chmod 755 /usr/local/bin/ctf-extract
 sudo chown root:root /usr/local/bin/ctf-extract
 ```
 
-Instructor note: Students should run `ctf-extract P1|P2|P3|P4` after solving each problem. Because keys are per-boot, they must extract again after every reboot.
+Instructor note: Students should run `ctf-extract P1|P2|P3|P4|P5` after solving each problem. Because keys are per-boot, they must extract again after every reboot.
 
 ---
 
@@ -405,6 +416,20 @@ sudo chmod 4755 /home/p1/p4/p4
 sudo rm -f /home/p1/p4/p4.c
 ```
 
+### P5: CSS Hijacking (Epiphany + VNC)
+Goal: Use CSS to reveal a hidden flag on the admin page and submit it.
+
+#### P5 Server (runs on localhost)
+- Server: `http://127.0.0.1:5005`
+- Admin page: `http://127.0.0.1:5005/admin`
+- CSS upload: `http://127.0.0.1:5005/submit`
+
+#### P5 Setup Notes
+- VNC server runs on `:1` (host port `5901`).
+- Epiphany (`epiphany-browser`) is used for in‑VM browsing.
+- The P5 flag is stored at `/home/ctfadmin/flags/flag_p5.txt` and injected into the admin page.
+- VNC password is `ctfadmin` (change if desired).
+
 ## 5) Validation Checklist
 
 Run these checks:
@@ -457,8 +482,8 @@ sudo ctf-extract P2
 - VM runs on VirtualBox.
 - Use NAT and connect over SSH (host port 2222 -> guest 22).
 - P1: Find leaked SSH private key from web server, then SSH into VM.
-- P2–P4: Use local exploitation on provided binaries.
-- Flags change on every reboot. Run `ctf-extract P1|P2|P3|P4` after solving each problem.
+- P2–P5: Use local exploitation on provided binaries/services.
+- Flags change on every reboot. Run `ctf-extract P1|P2|P3|P4|P5` after solving each problem.
 
 Submission (tar available, zip not required):
 ```bash

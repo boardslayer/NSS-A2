@@ -6,7 +6,7 @@
 **Instructions**
 - This assignment is a capture-the-flag problem.
 - You will be given one single Ubuntu Linux image.
-- There are four problem sets, each dependent on the previous.
+- There are five problem sets, each dependent on the previous.
 - For each problem, you need to create a file in the stated format only.
 
 ## Problem 1: Gain Access
@@ -72,6 +72,24 @@ Submit a single tarball named `[EntryNumber]-P4.tar.gz`, e.g., `2022CSZ228230-P4
 
 ```text
 [EntryNumber]-P4.tar.gz
+|-- flag.txt
+`-- key.txt
+```
+
+## Problem 5: CSS Hijacking
+
+In this problem, you are given a local web application that loads attacker‑controlled CSS. An admin page contains a hidden flag that can be revealed via CSS manipulation.
+
+**Goal:** Use CSS hijacking to reveal the `ctfadmin` flag.
+
+**Hint:** The admin page loads a user‑supplied stylesheet. Look for ways CSS can change visibility or style of hidden elements.
+**Access:** Connect via VNC (host port `5901`) and open Epiphany (`epiphany-browser`) in the VM.
+
+**Solution Format**  
+Submit a single tarball named `[EntryNumber]-P5.tar.gz`, e.g., `2022CSZ228231-P5.tar.gz`. The file should contain `flag.txt` and `key.txt`.
+
+```text
+[EntryNumber]-P5.tar.gz
 |-- flag.txt
 `-- key.txt
 ```

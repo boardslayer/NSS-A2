@@ -104,6 +104,9 @@ head -c 32 /dev/urandom | base64 > "$KEY_FILE"
 chown p1:p1 "$KEY_FILE"
 chmod 600 "$KEY_FILE"
 
+# Clear per-boot solved markers
+rm -f /opt/p3/solved /opt/p4/solved /opt/p5/solved 2>/dev/null || true
+
 # Derive flags using the per-boot key
 KEY=$(cat "$KEY_FILE")
 FLAG_P1=$(printf '%s' "P1:$KEY" | sha256sum | awk '{print $1}')

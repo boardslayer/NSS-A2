@@ -32,6 +32,7 @@ Vagrant.configure("2") do |config|
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
   config.vm.network "forwarded_port", guest: 80, host: 8000
   config.vm.network "forwarded_port", guest: 85, host: 8085
+  config.vm.network "forwarded_port", guest: 5901, host: 5901
   # Decoy ports
   config.vm.network "forwarded_port", guest: 9001, host: 9001
   config.vm.network "forwarded_port", guest: 9002, host: 9002
@@ -85,4 +86,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "p2/provision_p2.sh"
   config.vm.provision "shell", path: "p3/provision_p3.sh"
   config.vm.provision "shell", path: "p4/provision_p4.sh"
+  config.vm.provision "shell", path: "p5/provision_p5.sh"
 end
