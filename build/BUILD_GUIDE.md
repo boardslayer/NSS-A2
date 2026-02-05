@@ -27,6 +27,7 @@ Use VirtualBox to create a new VM:
 - RAM: `2–4 GB`
 - CPU: `2 cores`
 - Disk: `20 GB` (VDI, dynamically allocated)
+- vagrant password changed to 'vagrantpassword' for instructor testing
 
 Network:
 - Adapter 1: NAT
