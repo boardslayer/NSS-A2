@@ -54,8 +54,11 @@ After install, update and install base packages:
 ```bash
 sudo apt update
 sudo apt -y upgrade
-sudo apt -y install openssh-server nginx build-essential gdb python3 python3-pip net-tools socat
-```
+sudo apt -y upgrade
+sudo apt -y install openssh-server nginx build-essential gdb python3 python3-pip net-tools socat \
+  python3 python3-venv python3-pip \
+  xfce4 xfce4-goodies tigervnc-standalone-server tigervnc-common \
+  dbus-x11 xterm epiphany-browser```
 
 ---
 
